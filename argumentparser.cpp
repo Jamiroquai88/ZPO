@@ -5,6 +5,8 @@
  *      Author: darthvader
  */
 
+#include "getopt.h"
+
 #include "argumentparser.h"
 
 ArgumentParser::ArgumentParser() : m_in_file(0), m_out_file(0), m_mode(0) {
@@ -42,7 +44,7 @@ bool ArgumentParser::ParseArguments(int argc, char **argv) {
 	}
 
 	//check if all args were given
-	if (!m_in_file || !m_out_file || !m_mode) {
+	if (m_in_file.length() == 0 || m_out_file.length() == 0 || m_mode.length() == 0) {
 	    std::cerr << "ERROR: Too few arguments set." << std::endl;
 	    Help();
 	    return false;

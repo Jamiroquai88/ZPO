@@ -9,7 +9,6 @@
 
 DetectionMethod::DetectionMethod() {
 
-
 }
 
 DetectionMethod::~DetectionMethod() {

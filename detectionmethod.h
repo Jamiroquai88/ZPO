@@ -8,12 +8,14 @@
 #ifndef DETECTIONMETHOD_H_
 #define DETECTIONMETHOD_H_
 
-class DetectionMethod {
-public:
-	DetectionMethod();
-	virtual ~DetectionMethod();
+#include <string>
 
-	virtual bool ProcessFile(std::string input_file, std::string output_file) = 0;
+class DetectionMethod {
+	public:
+		DetectionMethod();
+		virtual ~DetectionMethod();
+
+		virtual bool ProcessFile(std::string input_file, std::string output_file) = 0;
 };
 
 #endif /* DETECTIONMETHOD_H_ */

@@ -12,11 +12,11 @@
 
 
 class Gradient : DetectionMethod {
-public:
-	Gradient();
-	virtual ~Gradient();
+	public:
+		Gradient();
+		virtual ~Gradient();
 
-	bool ProcessFile(std::string input_file, std::string output_file);
+		bool ProcessFile(std::string input_file, std::string output_file);
 };
 
 #endif /* GRADIENT_H_ */

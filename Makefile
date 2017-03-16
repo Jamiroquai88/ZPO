@@ -1,5 +1,5 @@
 CP=g++
-CPFLAGS=-std=c++11 -pthread -pedantic -Wall -O3 -g
+CPFLAGS=-std=c++11 -pthread -pedantic -Wall -O3 -g `pkg-config opencv --cflags`
 CPP_FILES := $(wildcard *.cpp)
 OBJ_FILES := $(CPP_FILES:.cpp=.o)
 
