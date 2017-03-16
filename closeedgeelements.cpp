@@ -13,7 +13,6 @@
 
 CloseEdgeElements::CloseEdgeElements() {
 
-
 }
 
 CloseEdgeElements::~CloseEdgeElements() {
