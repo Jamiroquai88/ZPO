@@ -8,11 +8,12 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <vector>
 
 #include "gradient.h"
 
 using namespace cv;
-
+using namespace std;
 
 Gradient::Gradient() {
 
@@ -42,7 +43,7 @@ bool Gradient::ProcessFile(std::string input_file, std::string output_file) {
 	morphologyEx(bw, connected, MORPH_CLOSE, morphKernel);
 	// find contours
 	Mat mask = Mat::zeros(bw.size(), CV_8UC1);
-	vector< vector<Point> > contours;
+	vector <vector<Point>> contours;
 	vector<Vec4i> hierarchy;
 	findContours(connected, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
