@@ -7,7 +7,7 @@ OBJ_FILES := $(CPP_FILES:.cpp=.o)
 all: detect-text
 
 detect-text: $(OBJ_FILES)
-	$(CP) $(CPFLAGS) $(OPENCV) $^ -o $@ -lm
+	$(CP) $(CPFLAGS) $^ -o $@ -lm $(OPENCV)
 
 %.o:%.cpp
 	$(CP) $(CPFLAGS) -c $< -o $@ -I/usr/local/include -L/usr/local/lib64 -lm
