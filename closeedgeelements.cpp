@@ -44,17 +44,17 @@ std::vector<cv::Rect> CloseEdgeElements::DetectLetters(cv::Mat img)
 
 bool CloseEdgeElements::ProcessFile(std::string input_file, std::string output_file) {
 	//Read
-	cv::Mat img1=cv::imread("side_1.jpg");
-	cv::Mat img2=cv::imread("side_2.jpg");
+	cv::Mat img1=cv::imread(input_file);
+	//cv::Mat img2=cv::imread("side_2.jpg");
 	//Detect
 	std::vector<cv::Rect> letterBBoxes1 = DetectLetters(img1);
-	std::vector<cv::Rect> letterBBoxes2 = DetectLetters(img2);
+	//std::vector<cv::Rect> letterBBoxes2 = DetectLetters(img2);
 	//Display
 	for(int i=0; i< letterBBoxes1.size(); i++)
 	    cv::rectangle(img1,letterBBoxes1[i],cv::Scalar(0,255,0),3,8,0);
-	cv::imwrite( "imgOut1.jpg", img1);
-	for(int i=0; i< letterBBoxes2.size(); i++)
-	    cv::rectangle(img2,letterBBoxes2[i],cv::Scalar(0,255,0),3,8,0);
-	cv::imwrite( "imgOut2.jpg", img2);
+	cv::imwrite(output_file, img1);
+	//for(int i=0; i< letterBBoxes2.size(); i++)
+	//    cv::rectangle(img2,letterBBoxes2[i],cv::Scalar(0,255,0),3,8,0);
+	//cv::imwrite( "imgOut2.jpg", img2);
 	return true;
 }

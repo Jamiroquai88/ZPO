@@ -9,7 +9,7 @@
 
 #include "argumentparser.h"
 
-ArgumentParser::ArgumentParser() : m_in_file(0), m_out_file(0), m_mode(0) {
+ArgumentParser::ArgumentParser() : m_in_file(""), m_out_file(""), m_mode("") {
 
 }
 
