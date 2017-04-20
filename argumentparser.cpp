@@ -21,7 +21,7 @@ void ArgumentParser::Help() {
 	std::cout << "Usage: ./text_detector" << std::endl
 			  << "-i input_image" << std::endl
 			  << "-o output_image" << std::endl
-			  << "-m mode [gradient, cee]" << std::endl;
+			  << "-m mode [gradient, cee, mixed]" << std::endl;
 }
 
 bool ArgumentParser::ParseArguments(int argc, char **argv) {

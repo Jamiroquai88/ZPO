@@ -20,9 +20,9 @@ class CloseEdgeElements : DetectionMethod {
 		virtual ~CloseEdgeElements();
 
 		bool ProcessFile(std::string input_file, std::string output_file);
-
-	private:
 		std::vector<cv::Rect> DetectLetters(cv::Mat img);
+	private:
+		
 };
 
 #endif /* CLOSEEDGEELEMENTS_H_ */

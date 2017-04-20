@@ -25,9 +25,23 @@ Gradient::~Gradient() {
 
 bool Gradient::ProcessFile(std::string input_file, std::string output_file) {
 	Mat large = imread(input_file);
+	std::vector<Rect> boundaryRects = detectText(large);
 	Mat rgb;
-	// downsample and use it for processing
 	pyrDown(large, rgb);
+	for (int i = 0; i < boundaryRects.size(); i++)
+		cv::rectangle(rgb, boundaryRects[i], cv::Scalar(0, 255, 0), 2);
+	cv::imwrite(output_file, rgb);
+
+	return true;
+}
+
+std::vector<cv::Rect> Gradient::detectText(cv::Mat inputImg)
+{
+	
+	Mat rgb;
+	std::vector<cv::Rect> boundRects;
+	// downsample and use it for processing
+	pyrDown(inputImg, rgb);
 	Mat small;
 	cvtColor(rgb, small, CV_BGR2GRAY);
 	// morphological gradient
@@ -48,26 +62,26 @@ bool Gradient::ProcessFile(std::string input_file, std::string output_file) {
 	findContours(connected, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
 	// filter contours
-	for(int idx = 0; idx >= 0; idx = hierarchy[idx][0]) {
-	    Rect rect = boundingRect(contours[idx]);
-	    Mat maskROI(mask, rect);
-	    maskROI = Scalar(0, 0, 0);
-	    // fill the contour
-	    drawContours(mask, contours, idx, Scalar(255, 255, 255), CV_FILLED);
-	    // ratio of non-zero pixels in the filled region
-	    double r = (double)countNonZero(maskROI)/(rect.width*rect.height);
+	for (int idx = 0; idx >= 0; idx = hierarchy[idx][0]) {
+		Rect rect = boundingRect(contours[idx]);
+		Mat maskROI(mask, rect);
+		maskROI = Scalar(0, 0, 0);
+		// fill the contour
+		drawContours(mask, contours, idx, Scalar(255, 255, 255), CV_FILLED);
+		// ratio of non-zero pixels in the filled region
+		double r = (double)countNonZero(maskROI) / (rect.width*rect.height);
 
-	    if (r > .45 /* assume at least 45% of the area is filled if it contains text */
-	            &&
-	            (rect.height > 8 && rect.width > 8) /* constraints on region size */
-	            /* these two conditions alone are not very robust. better to use something
-	            like the number of significant peaks in a horizontal projection as a third condition */
-	                )
-	    {
-	        rectangle(rgb, rect, Scalar(0, 255, 0), 2);
-	    }
+		if (r > .45 /* assume at least 45% of the area is filled if it contains text */
+			&&
+			(rect.height > 8 && rect.width > 8) /* constraints on region size */
+												/* these two conditions alone are not very robust. better to use something
+												like the number of significant peaks in a horizontal projection as a third condition */
+			)
+		{
+			boundRects.push_back(rect);
+		}
 	}
-	imwrite(output_file, rgb);
-	return true;
+
+	return boundRects;
 }
 
