@@ -11,8 +11,8 @@ class InteractiveImage : public QLabel
 {
     Q_OBJECT
 public:
-    InteractiveImage::InteractiveImage(QWidget *parent);
-    void InteractiveImage::setRects(std::vector<cv::Rect> Rects);
+    InteractiveImage(QWidget *parent);
+    void setRects(std::vector<cv::Rect> Rects);
     cv::Rect m_smallest;
 protected:
     void mousePressEvent(QMouseEvent *ev) override;

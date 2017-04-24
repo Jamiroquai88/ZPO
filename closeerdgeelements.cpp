@@ -32,7 +32,7 @@ std::vector<cv::Rect> CloseEdgeElements::DetectLetters(cv::Mat img)
     std::vector< std::vector< cv::Point> > contours;
     cv::findContours(img_threshold, contours, 0, 1);
     std::vector<std::vector<cv::Point> > contours_poly(contours.size());
-    for (int i = 0; i < contours.size(); i++)
+    for (unsigned int i = 0; i < contours.size(); i++)
         if (contours[i].size() > 100)
         {
             cv::approxPolyDP(cv::Mat(contours[i]), contours_poly[i], 3, true);

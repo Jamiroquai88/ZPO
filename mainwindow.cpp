@@ -7,7 +7,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    mp_ocr(0)
 {
     ui->setupUi(this);
     ui->gradientButton->setEnabled(false);
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fusionButton->setEnabled(false);
     ui->showAreaButton->setEnabled(false);
     ui->saveImageButton->setEnabled(false);
+    mp_ocr = new OCR();
 }
 
 
@@ -46,7 +48,7 @@ void MainWindow::on_gradientButton_clicked()
     cv::Mat imgMAT = cv::imread(str);
     std::vector<cv::Rect> boundaryRects = grad.detectText(imgMAT);
     cv::pyrDown(imgMAT, imgMAT);
-    for (int i = 0; i < boundaryRects.size(); i++)
+    for (unsigned int i = 0; i < boundaryRects.size(); i++)
     {
         cv::rectangle(imgMAT, boundaryRects[i], cv::Scalar(0, 255, 0), 2);
     }
@@ -54,6 +56,7 @@ void MainWindow::on_gradientButton_clicked()
     ui->labelimage->setPixmap(QPixmap::fromImage(img));
     ui->labelimage->setRects(boundaryRects);
     ui->saveImageButton->setEnabled(true);
+    ui->showAreaButton->setEnabled(true);
 }
 
 
@@ -64,7 +67,7 @@ void MainWindow::on_ceeButton_clicked()
     cv::Mat imgMat = cv::imread(str);
     std::vector<cv::Rect> boundaryRects = cee.DetectLetters(imgMat);
     cv::pyrDown(imgMat, imgMat);
-    for(int i=0; i< boundaryRects.size(); i++)
+    for(unsigned int i=0; i< boundaryRects.size(); i++)
     {
         cv::rectangle(imgMat,boundaryRects[i],cv::Scalar(0,255,0),2,8,0);
     }
@@ -73,6 +76,7 @@ void MainWindow::on_ceeButton_clicked()
     ui->labelimage->setPixmap(QPixmap::fromImage(img));
     ui->labelimage->setRects(boundaryRects);
     ui->saveImageButton->setEnabled(true);
+    ui->showAreaButton->setEnabled(true);
 }
 
 
@@ -84,7 +88,7 @@ void MainWindow::on_fusionButton_clicked()
     cv::Mat imgMat = cv::imread(str);
     cv::pyrDown(imgMat, imgMat);
 
-    for (int i = 0; i < intersectionRects.size(); i++)
+    for (unsigned int i = 0; i < intersectionRects.size(); i++)
     {
         cv::rectangle(imgMat, intersectionRects[i], cv::Scalar(0, 255, 0), 2) ;
     }
@@ -92,6 +96,7 @@ void MainWindow::on_fusionButton_clicked()
     ui->labelimage->setPixmap(QPixmap::fromImage(img));
     ui->labelimage->setRects(intersectionRects);
     ui->saveImageButton->setEnabled(true);
+    ui->showAreaButton->setEnabled(true);
 }
 
 
@@ -143,5 +148,18 @@ void MainWindow::setRadioButtons(){
     ui->fusionButton->setAutoExclusive(false);
     ui->fusionButton->setChecked(false);
     ui->fusionButton->setAutoExclusive(true);
+
+}
+
+void MainWindow::on_showAreaButton_clicked()
+{
+    QString text = mp_ocr->ProcessFile(m_fileName);
+    if (text.length() == 0) {
+        // TODO
+        // show warning dialog
+    }
+    else {
+        ui->textEdit->setText(text);
+    }
 
 }

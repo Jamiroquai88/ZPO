@@ -13,6 +13,8 @@
 #include <iostream>
 #include <string>
 
+#include "ocr.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -36,11 +38,13 @@ private slots:
     void on_ceeButton_clicked();
     void on_fusionButton_clicked();
     void on_saveImageButton_clicked();
+    void on_showAreaButton_clicked();
 
 private:
     Ui::MainWindow *ui;
+    OCR *mp_ocr;
     QString m_fileName;
-    void MainWindow::setRadioButtons();
+    void setRadioButtons();
 };
 
 #endif // MAINWINDOW_H

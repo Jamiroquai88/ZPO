@@ -11,10 +11,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = text_detection
 TEMPLATE = app
 
-INCLUDEPATH += "D:\Libraries\opencv\build\include"
+INCLUDEPATH += /usr/local/include/opencv /usr/local/include/tesseract
 CONFIG += c++11
 
-LIBS += -LD:\Libraries\opencv\build\x64\vc14\lib -lopencv_world320d
+LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc -ltesseract -llept
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -33,12 +33,14 @@ SOURCES += main.cpp\
     closeerdgeelements.cpp \
     fusion.cpp \
     gradient.cpp \
-    interactiveimage.cpp
+    interactiveimage.cpp \
+    ocr.cpp
 
 HEADERS  += mainwindow.h \
     closeerdgeelements.h \
     fusion.h \
     gradient.h \
-    interactiveimage.h
+    interactiveimage.h \
+    ocr.h
 
 FORMS    += mainwindow.ui

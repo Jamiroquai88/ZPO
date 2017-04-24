@@ -21,7 +21,7 @@ void InteractiveImage::mousePressEvent(QMouseEvent *ev)
     cv::Point P{pos.x(),pos.y()};
 
    //first rectangle on click-area
-    for (int i = 0; i < m_FinalRects.size(); i++)
+    for (unsigned int i = 0; i < m_FinalRects.size(); i++)
     {
        if(m_FinalRects[i].contains(P))
        {
@@ -30,7 +30,7 @@ void InteractiveImage::mousePressEvent(QMouseEvent *ev)
        }
     }
     //goes through all rectangles
-    for (int i = 0; i < m_FinalRects.size(); i++)
+    for (unsigned int i = 0; i < m_FinalRects.size(); i++)
     {
         if(m_FinalRects[i].contains(P)) //finds those on click-area
         {

@@ -5,6 +5,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,7 +18,7 @@ class Fusion
 public:
     Fusion();
     ~Fusion();
-    std::vector<cv::Rect> Fusion::getFusion(std::string input_file);
+    std::vector<cv::Rect> getFusion(std::string input_file);
 };
 
 #endif // FUSION_H
