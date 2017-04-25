@@ -30,11 +30,11 @@ LIBS += -L/usr/local/lib -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lope
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    closeerdgeelements.cpp \
     fusion.cpp \
     gradient.cpp \
     interactiveimage.cpp \
-    ocr.cpp
+    ocr.cpp \
+    closeerdgeelements.cpp
 
 HEADERS  += mainwindow.h \
     closeerdgeelements.h \

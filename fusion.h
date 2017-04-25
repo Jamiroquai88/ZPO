@@ -18,6 +18,7 @@ class Fusion
 public:
     Fusion();
     ~Fusion();
+
     std::vector<cv::Rect> getFusion(std::string input_file);
 };
 

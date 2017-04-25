@@ -17,11 +17,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->showAreaButton->setEnabled(false);
     ui->saveImageButton->setEnabled(false);
     mp_ocr = new OCR();
+    mp_ocr->Init();
 }
 
 
 MainWindow::~MainWindow()
 {
+    delete mp_gradient;
+    delete mp_cee;
+    delete mp_fusion;
+    delete mp_ocr;
     delete ui;
 }
 
@@ -39,66 +44,6 @@ void MainWindow::on_actionOpen_triggered()
         setRadioButtons();
     }
 }
-
-
-void MainWindow::on_gradientButton_clicked()
-{
-    Gradient grad;
-    std::string str = m_fileName.toStdString();
-    cv::Mat imgMAT = cv::imread(str);
-    std::vector<cv::Rect> boundaryRects = grad.detectText(imgMAT);
-    cv::pyrDown(imgMAT, imgMAT);
-    for (unsigned int i = 0; i < boundaryRects.size(); i++)
-    {
-        cv::rectangle(imgMAT, boundaryRects[i], cv::Scalar(0, 255, 0), 2);
-    }
-    QImage img = Mat2QImage(imgMAT);
-    ui->labelimage->setPixmap(QPixmap::fromImage(img));
-    ui->labelimage->setRects(boundaryRects);
-    ui->saveImageButton->setEnabled(true);
-    ui->showAreaButton->setEnabled(true);
-}
-
-
-void MainWindow::on_ceeButton_clicked()
-{
-    CloseEdgeElements cee;
-    std::string str = m_fileName.toStdString();
-    cv::Mat imgMat = cv::imread(str);
-    std::vector<cv::Rect> boundaryRects = cee.DetectLetters(imgMat);
-    cv::pyrDown(imgMat, imgMat);
-    for(unsigned int i=0; i< boundaryRects.size(); i++)
-    {
-        cv::rectangle(imgMat,boundaryRects[i],cv::Scalar(0,255,0),2,8,0);
-    }
-
-    QImage img = Mat2QImage(imgMat);
-    ui->labelimage->setPixmap(QPixmap::fromImage(img));
-    ui->labelimage->setRects(boundaryRects);
-    ui->saveImageButton->setEnabled(true);
-    ui->showAreaButton->setEnabled(true);
-}
-
-
-void MainWindow::on_fusionButton_clicked()
-{
-    Fusion fus;
-    std::string str = m_fileName.toStdString();
-     std::vector<cv::Rect> intersectionRects = fus.getFusion(str);
-    cv::Mat imgMat = cv::imread(str);
-    cv::pyrDown(imgMat, imgMat);
-
-    for (unsigned int i = 0; i < intersectionRects.size(); i++)
-    {
-        cv::rectangle(imgMat, intersectionRects[i], cv::Scalar(0, 255, 0), 2) ;
-    }
-    QImage img = Mat2QImage(imgMat);
-    ui->labelimage->setPixmap(QPixmap::fromImage(img));
-    ui->labelimage->setRects(intersectionRects);
-    ui->saveImageButton->setEnabled(true);
-    ui->showAreaButton->setEnabled(true);
-}
-
 
 void MainWindow::displayText(cv::Rect detectedRect)
 {
@@ -162,4 +107,44 @@ void MainWindow::on_showAreaButton_clicked()
         ui->textEdit->setText(text);
     }
 
+}
+
+void MainWindow::on_originalImageButton_clicked()
+{
+
+}
+
+void MainWindow::on_processImageButton_clicked()
+{
+    if (!ui->gradientButton->isChecked() && !ui->ceeButton->isChecked() && !ui->fusionButton->isChecked()) {
+        // TODO, display warning
+        return;
+    }
+    std::string str = m_fileName.toStdString();
+    std::vector<cv::Rect> boundaryRects;
+    cv::Mat imgMat = cv::imread(str);
+    if (ui->gradientButton->isChecked()) {
+        boundaryRects = mp_gradient->detectText(imgMat);
+        cv::pyrDown(imgMat, imgMat);
+        for (unsigned int i = 0; i < boundaryRects.size(); i++)
+            cv::rectangle(imgMat, boundaryRects[i], cv::Scalar(0, 255, 0), 2);
+    }
+    if (ui->ceeButton->isChecked()) {
+        boundaryRects = mp_cee->DetectLetters(imgMat);
+        cv::pyrDown(imgMat, imgMat);
+        for(unsigned int i=0; i< boundaryRects.size(); i++)
+            cv::rectangle(imgMat, boundaryRects[i], cv::Scalar(0,255,0), 2, 8, 0);
+    }
+    if (ui->fusionButton->isChecked()) {
+        boundaryRects = mp_fusion->getFusion(str);
+        cv::pyrDown(imgMat, imgMat);
+        for (unsigned int i = 0; i < boundaryRects.size(); i++)
+           cv::rectangle(imgMat, boundaryRects[i], cv::Scalar(0, 255, 0), 2);
+
+    }
+    QImage img = Mat2QImage(imgMat);
+    ui->labelimage->setPixmap(QPixmap::fromImage(img));
+    ui->labelimage->setRects(boundaryRects);
+    ui->saveImageButton->setEnabled(true);
+    ui->showAreaButton->setEnabled(true);
 }

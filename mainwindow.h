@@ -13,6 +13,9 @@
 #include <iostream>
 #include <string>
 
+#include "gradient.h"
+#include "closeerdgeelements.h"
+#include "fusion.h"
 #include "ocr.h"
 
 namespace Ui {
@@ -34,14 +37,18 @@ public slots:
 
 private slots:
     void on_actionOpen_triggered();
-    void on_gradientButton_clicked();
-    void on_ceeButton_clicked();
-    void on_fusionButton_clicked();
     void on_saveImageButton_clicked();
     void on_showAreaButton_clicked();
 
+    void on_originalImageButton_clicked();
+
+    void on_processImageButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+    Gradient *mp_gradient;
+    CloseEdgeElements *mp_cee;
+    Fusion *mp_fusion;
     OCR *mp_ocr;
     QString m_fileName;
     void setRadioButtons();

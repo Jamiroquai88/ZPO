@@ -7,9 +7,13 @@
 
 class OCR
 {
-public:
-    OCR();
-    QString ProcessFile(QString f);
+    public:
+        OCR();
+        bool Init();
+        QString ProcessFile(QString f);
+
+    private:
+        tesseract::TessBaseAPI *mp_api;
 };
 
 #endif // OCR_H

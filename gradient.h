@@ -14,7 +14,7 @@ class Gradient
 public:
     Gradient();
     ~Gradient();
-//    cv::Mat Gradient::ProcessFile(std::string input_file);
+
     std::vector<cv::Rect> detectText(cv::Mat inputImg);
 };
 

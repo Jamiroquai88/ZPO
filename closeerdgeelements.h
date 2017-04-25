@@ -23,7 +23,6 @@ class CloseEdgeElements
         CloseEdgeElements();
         virtual ~CloseEdgeElements();
 
-       // cv::Mat CloseEdgeElements::ProcessFile(std::string input_file);
         std::vector<cv::Rect> DetectLetters(cv::Mat img);
     private:
 
