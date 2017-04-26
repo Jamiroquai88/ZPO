@@ -17,6 +17,7 @@
 #include "closeerdgeelements.h"
 #include "fusion.h"
 #include "ocr.h"
+#include "interactiveimage.h"
 
 namespace Ui {
 class MainWindow;
@@ -52,6 +53,7 @@ private:
     OCR *mp_ocr;
     QString m_fileName;
     void setRadioButtons();
+    QImage originalImage;
 };
 
 #endif // MAINWINDOW_H

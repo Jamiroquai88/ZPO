@@ -14,10 +14,16 @@ public:
     InteractiveImage(QWidget *parent);
     void setRects(std::vector<cv::Rect> Rects);
     cv::Rect m_smallest;
+    QPixmap scaledPixmap() const;
+public slots:
+    void setPixmap ( const QPixmap &p);
+    void resizeEvent(QResizeEvent *ev);
 protected:
     void mousePressEvent(QMouseEvent *ev) override;
+    void resizeImage();
 private:
     std::vector<cv::Rect> m_FinalRects;
+    QPixmap pix;
 signals:
     void sendRectToUi(cv::Rect smallestRect);
 };

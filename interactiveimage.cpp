@@ -1,6 +1,7 @@
 #include "interactiveimage.h"
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QDebug>
 
 InteractiveImage::InteractiveImage(QWidget *parent) : QLabel(parent)
 {
@@ -39,4 +40,20 @@ void InteractiveImage::mousePressEvent(QMouseEvent *ev)
         }
     }
     sendRectToUi(m_smallest); //sends signal to ui (mainwindow)
+}
+
+void InteractiveImage::setPixmap(const QPixmap &p) {
+    pix = p;
+    QLabel::setPixmap(scaledPixmap());
+}
+
+//rescales pixmap to current size of label
+QPixmap InteractiveImage::scaledPixmap() const {
+    return pix.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
+
+void InteractiveImage::resizeEvent(QResizeEvent *event) {
+    if(!pix.isNull()) {
+        QLabel::setPixmap(scaledPixmap());
+    }
 }

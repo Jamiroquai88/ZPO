@@ -3,7 +3,7 @@
 #include "gradient.h"
 #include "closeerdgeelements.h"
 #include "fusion.h"
-
+#include "interactiveimage.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,10 +37,11 @@ void MainWindow::on_actionOpen_triggered()
     if(testFileName != "")
     {
         m_fileName = testFileName;
-        QImage m_myImage;
-        m_myImage.load(m_fileName);
-        ui->labelimage->setPixmap(QPixmap::fromImage(m_myImage));
-        //ui->labelimage->setText("Choose method");  //show large image or set text?
+        originalImage.load(m_fileName);
+
+        //set image on label
+        ui->interactiveImage->setPixmap(QPixmap::fromImage(originalImage));
+
         setRadioButtons();
     }
 }
@@ -60,7 +61,7 @@ void MainWindow::on_saveImageButton_clicked()
      QString outputFileName =  QFileDialog::getSaveFileName(this, tr("Save image as"), "", "*.png");
     if(outputFileName != "")
     {
-        QImage qimageToSave = ui->labelimage->pixmap()->toImage();
+        QImage qimageToSave = ui->interactiveImage->pixmap()->toImage();
         qimageToSave.save(outputFileName);
     }
 }
@@ -111,7 +112,7 @@ void MainWindow::on_showAreaButton_clicked()
 
 void MainWindow::on_originalImageButton_clicked()
 {
-
+    ui->interactiveImage->setPixmap(QPixmap::fromImage(originalImage));
 }
 
 void MainWindow::on_processImageButton_clicked()
@@ -143,8 +144,8 @@ void MainWindow::on_processImageButton_clicked()
 
     }
     QImage img = Mat2QImage(imgMat);
-    ui->labelimage->setPixmap(QPixmap::fromImage(img));
-    ui->labelimage->setRects(boundaryRects);
+    ui->interactiveImage->setPixmap(QPixmap::fromImage(img));
+    //ui->interactiveImage->setRects(boundaryRects);
     ui->saveImageButton->setEnabled(true);
     ui->showAreaButton->setEnabled(true);
 }
