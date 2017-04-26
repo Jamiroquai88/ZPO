@@ -23,7 +23,6 @@ QString OCR::ProcessFile(QString f)
     mp_api->SetImage(image);
     outText = mp_api->GetUTF8Text();
     QString out = QString(outText);
-    mp_api->End();
     delete [] outText;
     pixDestroy(&image);
     return out;
