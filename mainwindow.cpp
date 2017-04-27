@@ -4,6 +4,7 @@
 #include "closeerdgeelements.h"
 #include "fusion.h"
 #include "interactiveimage.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->saveImageButton->setEnabled(false);
     mp_ocr = new OCR();
     mp_ocr->Init();
+    connect(ui->interactiveImage, SIGNAL(sendRectToUi(cv::Rect)), this, SLOT(onRectClicked(cv::Rect)));
 }
 
 
@@ -42,12 +44,29 @@ void MainWindow::on_actionOpen_triggered()
         //set image on label
         ui->interactiveImage->setPixmap(QPixmap::fromImage(originalImage));
 
+        imgMatOrig = cv::imread(m_fileName.toStdString());
+        cv::pyrDown(imgMatOrig, imgMatOrig);
+
         setRadioButtons();
     }
 }
 
-void MainWindow::displayText(cv::Rect detectedRect)
+void MainWindow::onRectClicked(cv::Rect clickedRect)
 {
+    //if rect is in vector and has been clicked again, then remove it from vector and change it's color
+    if(std::find(clickedRects.begin(), clickedRects.end(), clickedRect) != clickedRects.end()) {
+        clickedRects.erase(std::remove(clickedRects.begin(), clickedRects.end(), clickedRect), clickedRects.end());
+        cv::rectangle(imgMat, clickedRect, cv::Scalar(0, 255, 0), 2);
+    }
+    //else add it to vector and change it's color to red
+    else {
+        clickedRects.push_back(clickedRect);
+        cv::rectangle(imgMat, clickedRect, cv::Scalar(0, 0, 255), 2);
+    }
+
+    QImage img = Mat2QImage(imgMat);
+    ui->interactiveImage->setPixmap(QPixmap::fromImage(img));
+
     ui->showAreaButton->setEnabled(true);
     /*********************
      * call function to recognize text- TO DO
@@ -58,7 +77,7 @@ void MainWindow::displayText(cv::Rect detectedRect)
 void MainWindow::on_saveImageButton_clicked()
 {
 
-     QString outputFileName =  QFileDialog::getSaveFileName(this, tr("Save image as"), "", "*.png");
+    QString outputFileName =  QFileDialog::getSaveFileName(this, tr("Save image as"), "", "*.png");
     if(outputFileName != "")
     {
         QImage qimageToSave = ui->interactiveImage->pixmap()->toImage();
@@ -74,7 +93,6 @@ QImage MainWindow::Mat2QImage(cv::Mat const& src)
      QImage dest((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
      dest.bits();
      return dest;
-
 }
 
 
@@ -99,31 +117,54 @@ void MainWindow::setRadioButtons(){
 
 void MainWindow::on_showAreaButton_clicked()
 {
-    QString text = mp_ocr->ProcessFile(m_fileName);
-    if (text.length() == 0) {
-        // TODO
-        // show warning dialog
-    }
-    else {
-        ui->textEdit->setText(text);
-    }
+    QString tmp_filename = "ultra_super_unikatni_nazev_tmp_souboru.png";
+    QString detected_text = "";
 
+    //traverse all selected rectangles
+    for (unsigned int i = 0; i < clickedRects.size(); i++) {
+
+        //cut area with rectangle from original image and save it
+        cv::Mat textArea = imgMatOrig(clickedRects[i]);
+        QImage img = Mat2QImage(textArea);
+        img.save(tmp_filename);
+
+        //call OCR
+        QString text = mp_ocr->ProcessFile(tmp_filename);
+        if (text.length() == 0) {
+            // TODO
+            // show warning dialog
+        }
+        else {
+            detected_text += text;
+        }
+    }
+    ui->textEdit->setText(detected_text);
 }
+
 
 void MainWindow::on_originalImageButton_clicked()
 {
     ui->interactiveImage->setPixmap(QPixmap::fromImage(originalImage));
+
+    //clear everything => original_image == fresh start
+    clickedRects.clear();
+    ui->interactiveImage->setRects(clickedRects);
+    ui->textEdit->setText("");
 }
 
 void MainWindow::on_processImageButton_clicked()
 {
+    //clear everything to avoid unwanted behavior
+    clickedRects.clear();
+    ui->interactiveImage->setRects(clickedRects);
+
     if (!ui->gradientButton->isChecked() && !ui->ceeButton->isChecked() && !ui->fusionButton->isChecked()) {
         // TODO, display warning
         return;
     }
     std::string str = m_fileName.toStdString();
     std::vector<cv::Rect> boundaryRects;
-    cv::Mat imgMat = cv::imread(str);
+    imgMat = cv::imread(str);
     if (ui->gradientButton->isChecked()) {
         boundaryRects = mp_gradient->detectText(imgMat);
         cv::pyrDown(imgMat, imgMat);
@@ -141,11 +182,11 @@ void MainWindow::on_processImageButton_clicked()
         cv::pyrDown(imgMat, imgMat);
         for (unsigned int i = 0; i < boundaryRects.size(); i++)
            cv::rectangle(imgMat, boundaryRects[i], cv::Scalar(0, 255, 0), 2);
-
     }
+
     QImage img = Mat2QImage(imgMat);
     ui->interactiveImage->setPixmap(QPixmap::fromImage(img));
-    //ui->interactiveImage->setRects(boundaryRects);
+    ui->interactiveImage->setRects(boundaryRects);
     ui->saveImageButton->setEnabled(true);
     ui->showAreaButton->setEnabled(true);
 }

@@ -16,15 +16,24 @@ bool OCR::Init()
         return true;
 }
 
+
 QString OCR::ProcessFile(QString f)
 {
+    //need to call init before every recognition due to some OCR bullshit error..
+    Init();
+
     char *outText;
     Pix *image = pixRead(f.toStdString().c_str());
+
     mp_api->SetImage(image);
     outText = mp_api->GetUTF8Text();
     QString out = QString(outText);
     mp_api->End();
     delete [] outText;
     pixDestroy(&image);
+
+    //delete created help image
+    QFile file(f);
+    file.remove();
     return out;
 }

@@ -4,6 +4,8 @@
 #include "qstring.h"
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
+#include <QImage>
+#include <QFile>
 
 class OCR
 {

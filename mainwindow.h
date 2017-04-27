@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QLabel>
+#include <QImage>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -33,8 +34,9 @@ public:
     static cv::Mat QImage2Mat(QImage const& src);
     ~MainWindow();
 
+
 public slots:
-   void displayText(cv::Rect detectedRect);
+   void onRectClicked(cv::Rect detectedRect);
 
 private slots:
     void on_actionOpen_triggered();
@@ -53,7 +55,12 @@ private:
     OCR *mp_ocr;
     QString m_fileName;
     void setRadioButtons();
+    //QImage cutImageArea(cv::Rect clickedRect);
+    //cv::Mat cutImageArea(cv::Rect clickedRect);
     QImage originalImage;
+    cv::Mat imgMat;
+    cv::Mat imgMatOrig;
+    std::vector<cv::Rect> clickedRects;
 };
 
 #endif // MAINWINDOW_H
