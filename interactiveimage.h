@@ -24,6 +24,7 @@ protected:
 private:
     std::vector<cv::Rect> m_FinalRects;
     QPixmap pix;
+    QImage imgOrig;
 signals:
     void sendRectToUi(cv::Rect smallestRect);
 };

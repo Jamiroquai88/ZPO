@@ -19,7 +19,16 @@ void InteractiveImage::mousePressEvent(QMouseEvent *ev)
 {
     //saves coordinates from mouse-click
     QPoint pos = ev->pos();
-    cv::Point P{pos.x(),pos.y()};
+    //init cvPoint
+    cv::Point P{0, 0};
+
+    //get scale of original image due to scaled image
+    double scaleX = double(scaledPixmap().width())/double(pix.width());
+    double scaleY = double(scaledPixmap().height())/double(pix.height());
+
+    //rescale points to original image
+    P.x = double(pos.x())/scaleX;
+    P.y = double(pos.y())/scaleY;
 
     //set empty rect
     cv::Rect init(0,0,0,0);
@@ -56,7 +65,7 @@ void InteractiveImage::setPixmap(const QPixmap &p) {
 }
 
 //rescales pixmap to current size of label
-QPixmap InteractiveImage::scaledPixmap() const {
+QPixmap InteractiveImage::scaledPixmap() const {    
     return pix.scaled(this->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
