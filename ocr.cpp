@@ -19,9 +19,6 @@ bool OCR::Init()
 
 QString OCR::ProcessFile(QString f)
 {
-    //need to call init before every recognition due to some OCR bullshit error..
-    Init();
-
     char *outText;
     Pix *image = pixRead(f.toStdString().c_str());
 
