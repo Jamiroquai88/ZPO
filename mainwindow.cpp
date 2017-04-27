@@ -126,10 +126,8 @@ void MainWindow::on_showAreaButton_clicked()
 
         //cut area with rectangle from original image and save it
         cv::Mat textArea = imgMatOrig(clickedRects[i]);
-        QImage orig = Mat2QImage(imgMatOrig);
-        orig.save("orig.png");
+
         QImage img = Mat2QImage(textArea);
-        img.save("test.png");
         img.save(tmp_filename);
 
         //call OCR
