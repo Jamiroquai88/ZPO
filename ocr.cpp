@@ -29,7 +29,9 @@ QString OCR::ProcessFile(QString f)
     pixDestroy(&image);
 
     //delete created help image
-    QFile file(f);
-    file.remove();
+    if(f == "ultra_super_unikatni_nazev_tmp_souboru.png") {
+        QFile file(f);
+        file.remove();
+    }
     return out;
 }

@@ -121,23 +121,38 @@ void MainWindow::on_showAreaButton_clicked()
     QString tmp_filename = "ultra_super_unikatni_nazev_tmp_souboru.png";
     QString detected_text = "";
 
-    //traverse all selected rectangles
-    for (unsigned int i = 0; i < clickedRects.size(); i++) {
-
-        //cut area with rectangle from original image and save it
-        cv::Mat textArea = imgMatOrig(clickedRects[i]);
-
-        QImage img = Mat2QImage(textArea);
-        img.save(tmp_filename);
-
+    //if none rect clicked .. process whole image
+    if(clickedRects.empty()) {
         //call OCR
-        QString text = mp_ocr->ProcessFile(tmp_filename);
+        QString text = mp_ocr->ProcessFile(m_fileName);
         if (text.length() == 0) {
             // TODO
             // show warning dialog
         }
         else {
             detected_text += text;
+        }
+    }
+    //else process just selected rectangles
+    else {
+        //traverse all selected rectangles
+        for (unsigned int i = 0; i < clickedRects.size(); i++) {
+
+            //cut area with rectangle from original image and save it
+            cv::Mat textArea = imgMatOrig(clickedRects[i]);
+
+            QImage img = Mat2QImage(textArea);
+            img.save(tmp_filename);
+
+            //call OCR
+            QString text = mp_ocr->ProcessFile(tmp_filename);
+            if (text.length() == 0) {
+                // TODO
+                // show warning dialog
+            }
+            else {
+                detected_text += text;
+            }
         }
     }
     ui->textEdit->setText(detected_text);
